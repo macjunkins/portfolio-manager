@@ -1,0 +1,43 @@
+# Environment variables and secrets
+.env
+.env.local
+*.key
+*.pem
+credentials.json
+secrets.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Shell scripts
+*.swp
+*.swo
+*~
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp

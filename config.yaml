@@ -1,0 +1,114 @@
+# Portfolio Configuration
+# Defines all projects to monitor and their metadata
+
+github:
+  # GitHub username and organizations
+  user: macjunkins
+  organizations:
+    - name: "AcreetionOS-Linux"
+    - name: "EmberCore-Org"
+
+# Projects organized by strategic pillars (from meta-roadmap.md)
+projects:
+  # 🚨 Pillar 1: Revenue Generation (CRITICAL PATH)
+  - name: EmberCare-Business
+    path: /Users/johnjunkins/Projects/EmberCare-Business
+    github_repo: macjunkins/EmberCare-Business
+    pillar: revenue
+    priority: critical
+    description: "Backend API and business logic"
+
+  - name: EmberCareFlutter
+    path: /Users/johnjunkins/Projects/EmberCareFlutter
+    github_repo: macjunkins/EmberCareFlutter
+    pillar: revenue
+    priority: critical
+    description: "Desktop UI application"
+
+  # 🚀 Pillar 2: Infrastructure & Productivity (FORCE MULTIPLIER)
+  - name: rapid-mcp-server
+    path: /Users/johnjunkins/Projects/rapid-mcp-server
+    github_repo: macjunkins/rapid-mcp-server
+    pillar: infrastructure
+    priority: high
+    description: "MCP Server - Zig implementation"
+
+  - name: rapid-mcp-server-go
+    path: /Users/johnjunkins/Projects/rapid-mcp-server-go
+    github_repo: macjunkins/rapid-mcp-server-go
+    pillar: infrastructure
+    priority: high
+    description: "MCP Server - Go implementation"
+
+  - name: rapid-mcp-server-rust
+    path: /Users/johnjunkins/Projects/rapid-mcp-server-rust
+    github_repo: macjunkins/rapid-mcp-server-rust
+    pillar: infrastructure
+    priority: high
+    description: "MCP Server - Rust implementation"
+
+  - name: rapid-mcp-commands
+    path: /Users/johnjunkins/Projects/rapid-mcp-commands
+    github_repo: macjunkins/rapid-mcp-commands
+    pillar: infrastructure
+    priority: medium
+    description: "Command library (25 commands)"
+
+  - name: github-org-toolkit
+    path: /Users/johnjunkins/Projects/github-org-toolkit
+    github_repo: macjunkins/github-org-toolkit
+    pillar: infrastructure
+    priority: high
+    description: "GitHub automation and productivity"
+
+  # 📺 Pillar 3: Consistency & Reputation (DAILY PRACTICE)
+  - name: Streaming
+    path: /Users/johnjunkins/Projects/Streaming
+    github_repo: macjunkins/Streaming
+    pillar: consistency
+    priority: medium
+    description: "Two-Claude streaming system"
+
+  # 🟡 Pillar 4: Strategic Cleanup (LOWER PRIORITY)
+  - name: acreetion_os-Org
+    path: /Users/johnjunkins/Projects/acreetion_os-Org
+    github_repo: macjunkins/acreetion_os-Org
+    pillar: cleanup
+    priority: low
+    description: "Linux distro archival project"
+
+  # 🔬 Pillar 5: Strategic Innovation (EXPLORATORY)
+  - name: RapidOS
+    path: /Users/johnjunkins/Projects/RapidOS
+    github_repo: macjunkins/RapidOS
+    pillar: innovation
+    priority: medium
+    description: "ARM-first, AI-first Linux distribution"
+
+# Report settings
+reports:
+  output_dir: docs
+  date_format: "%Y-%m-%d"
+  commit_lookback_days: 90  # Show commits from last N days
+
+  # Priority thresholds for issue counting
+  issue_priorities:
+    - critical
+    - high
+    - medium
+    - low
+
+# Milestones to track
+milestones:
+  q1_2026:
+    start: "2026-01-01"
+    end: "2026-03-31"
+  q2_2026:
+    start: "2026-04-01"
+    end: "2026-06-30"
+  q3_2026:
+    start: "2026-07-01"
+    end: "2026-09-30"
+  q4_2026:
+    start: "2026-10-01"
+    end: "2026-12-31"

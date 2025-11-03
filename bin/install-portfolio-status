@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+# Install helper for the portfolio-status command.
+# This script creates a symlink to the portfolio-status wrapper in a directory on your PATH.
+# Preferred target: /usr/local/bin (macOS, most Linux)
+# Optional target:  $HOME/scripts (created if --home-scripts is used)
+# Fallback target:  $HOME/bin (created if missing)
+# Usage:
+#   ./bin/install-portfolio-status [--home-scripts] [--target-dir DIR]
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+WRAPPER="$SCRIPT_DIR/portfolio-status"
+CMD_NAME="portfolio-status"
+
+# Parse simple flags
+TARGET_DIR_OVERRIDE=""
+USE_HOME_SCRIPTS=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --home-scripts)
+      USE_HOME_SCRIPTS=1
+      shift
+      ;;
+    --target-dir)
+      TARGET_DIR_OVERRIDE="${2:-}"
+      if [[ -z "$TARGET_DIR_OVERRIDE" ]]; then
+        echo "Error: --target-dir requires a value" >&2
+        exit 1
+      fi
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      echo "Usage: ./bin/install-portfolio-status [--home-scripts] [--target-dir DIR]" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Ensure wrapper exists and is executable
+if [[ ! -f "$WRAPPER" ]]; then
+  echo "Error: wrapper not found at $WRAPPER" >&2
+  exit 1
+fi
+
+if [[ ! -x "$WRAPPER" ]]; then
+  chmod +x "$WRAPPER" || true
+fi
+
+choose_target_dir() {
+  # If explicit override provided, honor it
+  if [[ -n "$TARGET_DIR_OVERRIDE" ]]; then
+    mkdir -p "$TARGET_DIR_OVERRIDE"
+    echo "$TARGET_DIR_OVERRIDE"
+    return 0
+  fi
+
+  # If --home-scripts set, prefer $HOME/scripts
+  if [[ $USE_HOME_SCRIPTS -eq 1 ]]; then
+    mkdir -p "$HOME/scripts"
+    echo "$HOME/scripts"
+    return 0
+  fi
+
+  # Try /usr/local/bin if writable. On macOS with SIP, this is typically writable without sudo
+  if [[ -d "/usr/local/bin" && -w "/usr/local/bin" ]]; then
+    echo "/usr/local/bin"
+    return 0
+  fi
+
+  # Fallback: $HOME/bin
+  mkdir -p "$HOME/bin"
+  echo "$HOME/bin"
+}
+
+TARGET_DIR="$(choose_target_dir)"
+TARGET_LINK="$TARGET_DIR/$CMD_NAME"
+
+# Create or update symlink
+if [[ -L "$TARGET_LINK" || -e "$TARGET_LINK" ]]; then
+  rm -f "$TARGET_LINK"
+fi
+ln -s "$WRAPPER" "$TARGET_LINK"
+
+# Advise about PATH if necessary
+case ":$PATH:" in
+  *":$TARGET_DIR:"*) IN_PATH=1 ;;
+  *) IN_PATH=0 ;;
+ esac
+
+cat <<EOF
+✅ Installed: $CMD_NAME
+→ Symlink: $TARGET_LINK -> $WRAPPER
+EOF
+
+if [[ $IN_PATH -eq 0 ]]; then
+  echo ""
+  echo "It looks like $TARGET_DIR is not on your PATH. Add this line to your shell profile (e.g., ~/.zshrc or ~/.bashrc):"
+  echo ""
+  echo "  export PATH=\"$TARGET_DIR:\$PATH\""
+  echo ""
+  echo "Then restart your terminal or run:"
+  echo "  source ~/.zshrc   # or ~/.bashrc"
+fi
+
+echo ""
+echo "Test it now:"
+if [[ $IN_PATH -eq 1 ]]; then
+  echo "  $CMD_NAME -h"
+else
+  echo "  PATH=\"$TARGET_DIR:\$PATH\" $CMD_NAME -h"
+fi

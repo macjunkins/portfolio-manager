@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Wrapper to run the portfolio status report from anywhere.
+# Forwards all args to the underlying Python script.
+# Usage: portfolio-status [--lookback DAYS]
+
+set -euo pipefail
+
+# Resolve the real directory of this script, even if invoked via a symlink
+SCRIPT_SOURCE="${BASH_SOURCE[0]:-$0}"
+while [ -h "$SCRIPT_SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SCRIPT_SOURCE")" && pwd)"
+  TARGET="$(readlink "$SCRIPT_SOURCE")"
+  if [[ "$TARGET" != /* ]]; then
+    SCRIPT_SOURCE="$DIR/$TARGET"
+  else
+    SCRIPT_SOURCE="$TARGET"
+  fi
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SCRIPT_SOURCE")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Execute the Python script with all passed arguments
+exec python3 "$REPO_ROOT/commands/status.py" "$@"
